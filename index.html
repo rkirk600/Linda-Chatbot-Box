@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Linda Puckett</title>
+    <style>
+        /* Chatbox Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #f9f9f9;
+        }
+        .chatbot-header {
+            background: #000000;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .chat-log {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            height: 250px;
+            border-bottom: 1px solid #ddd;
+        }
+        .chat-input-container {
+            display: flex;
+            padding: 5px;
+            background: #f1f1f1;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .send-button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value.toLowerCase();
+            const chatLog = document.querySelector('.chat-log');
+
+            // Display user message
+            chatLog.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+            document.getElementById('user-input').value = '';
+
+            // Custom responses with keyword arrays
+            const customResponses = {
+                "age": "Oh, I’m 37! I don't look it, do I?",
+                "occupation": "I’m the receptionist at Magna Tan Bake & Spray Salon. I do a little bit of everything there, I answer the phone, talk to customers, play solitaire on the computer.",
+                "shoe size": "Oh, I’m a size 8... yeah, well 8.5 in Crocs!",
+                "convictions": "Huh?! Oh no, well, not recently. I got arrested for public drunkenness when I was younger. I got in a fight with this girl over a Toby Keith bandana at Dega Jam.",
+                "jathan": "Jathan? Oh, no, I didn't know him... He’s like, Brandy’s ex or something, right?",
+                "case details": "I don’t know anything about any of that. Like I done told you, we was at home all weekend. Well, until Lonnie left Saturday night.",
+                "vehicle": "Oh, I drive a Ford Escort.",
+                "lonnie_vehicle": "Lonnie drove a Dodge Caravan.",
+                "default": ["Huh?", "I have no idea", "I am not the brightest bulb when it comes to things like that."]
+            };
+
+            // Define keyword arrays for each response category
+            const keywords = {
+                age: ["age", "how old", "what age", "old are you"],
+                occupation: ["occupation", "work", "where do you work", "job", "what do you do"],
+                shoeSize: ["shoe size", "size shoe", "what size shoe", "shoe do you wear"],
+                convictions: ["convictions", "priors", "arrested", "ever been arrested", "any arrests"],
+                jathan: ["jathan", "brandy’s ex", "ex husband", "brandy's ex"],
+                caseDetails: ["case details", "where were you", "alibi", "what were you doing", "last weekend"],
+                vehicle: ["vehicle", "car do you drive", "type of car"],
+                lonnieVehicle: ["lonnie vehicle", "lonnie's car", "what car did lonnie drive", "lonnie's vehicle"]
+            };
+
+            // Function to check if any keyword in an array is present in the user input
+            const checkKeywords = (keywordsArray) => {
+                return keywordsArray.some(keyword => userInput.includes(keyword));
+            };
+
+            // Check for specific keywords in user input to provide custom responses
+            if (checkKeywords(keywords.age)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.age}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.occupation)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.occupation}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.shoeSize)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses['shoe size']}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.convictions)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.convictions}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.jathan)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.jathan}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.caseDetails)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses['case details']}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.vehicle)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.vehicle}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else if (checkKeywords(keywords.lonnieVehicle)) {
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${customResponses.lonnie_vehicle}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            } else {
+                // For any other input, randomly select one of the default responses
+                const randomDefault = customResponses.default[Math.floor(Math.random() * customResponses.default.length)];
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${randomDefault}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+                return;
+            }
+
+            // OpenAI API call for other responses if no match was found in custom responses
+            const apiKey = 'YOUR_OPENAI_API_KEY'; // Replace with your actual API key
+            const endpoint = 'https://api.openai.com/v1/chat/completions';
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            };
+
+            const prompt = "You are Linda Puckett, a 37-year-old receptionist at Magna Tan Bake & Spray Salon. Linda is a bit absent-minded, slightly ditzy, and tends to avoid talking about personal matters like prior convictions. She is guarded, especially about Jathan, whom she claims never to have met. Respond to user questions as Linda would, keeping the conversation casual and a bit scattered.";
+
+            const body = JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    { "role": "system", "content": prompt },
+                    { "role": "user", "content": userInput }
+                ]
+            });
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body
+                });
+
+                const data = await response.json();
+                const botResponse = data.choices[0].message.content;
+
+                // Display bot response
+                chatLog.innerHTML += `<p><strong>Linda:</strong> ${botResponse}</p>`;
+                chatLog.scrollTop = chatLog.scrollHeight;
+            } catch (error) {
+                chatLog.innerHTML += `<p><strong>Error:</strong> Could not reach the server.</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Chatbot Container -->
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            Chat with Linda
+        </div>
+        <div class="chat-log" id="chat-log"></div>
+        <div class="chat-input-container">
+            <input type="text" id="user-input" class="chat-input" placeholder="Type your message...">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+</body>
+</html>
