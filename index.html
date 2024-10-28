@@ -73,7 +73,7 @@
                 "case details": "I don’t know anything about any of that. Like I done told you, we was at home all weekend. Well, until Lonnie left Saturday night.",
                 "vehicle": "Oh, I drive a Ford Escort.",
                 "lonnie_vehicle": "Lonnie drove a Dodge Caravan.",
-                "default": ["Huh?", "I have no idea", "I am not the brightest bulb when it comes to things like that."]
+                "default": ["Huh?", "I have no idea", "I am not the brightest bulb when it comes to things like that.", "Have you ever watched 90 Day Fiance?", "I don't know, my brain is in a fog", "All I can think about right now are Hallmark movies", "I don't know, I guess I'm just bummed out about Lonnie, you know, dying and stuff."]
             };
 
             // Define keyword arrays for each response category
@@ -135,7 +135,7 @@
             }
 
             // OpenAI API call for other responses if no match was found in custom responses
-            const apiKey = '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'; // Replace with your actual API key
+            const apiKey = 'YOUR_OPENAI_API_KEY'; // Replace with your actual API key
             const endpoint = 'https://api.openai.com/v1/chat/completions';
             const headers = {
                 'Content-Type': 'application/json',
@@ -184,4 +184,4 @@
         </div>
     </div>
 </body>
-</html>
+</
